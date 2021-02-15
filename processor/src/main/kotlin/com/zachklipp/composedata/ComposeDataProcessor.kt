@@ -88,6 +88,6 @@ class ComposeDataProcessor : SymbolProcessor {
   }
 
   companion object {
-    val COMPOSE_DATA_ANNOTATION = ComposeData::class
+    val COMPOSE_DATA_ANNOTATION = ComposeModel::class
   }
 }

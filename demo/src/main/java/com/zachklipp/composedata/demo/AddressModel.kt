@@ -2,10 +2,10 @@ package com.zachklipp.composedata.demo
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.zachklipp.composedata.ComposeData
+import com.zachklipp.composedata.ComposeModel
 
-@ComposeData
-interface Address {
+@ComposeModel
+interface AddressModel {
   val street: String get() = ""
   val city: String get() = ""
   val state: String get() = ""
@@ -15,7 +15,7 @@ interface Address {
   fun onStateChanged(state: String)
 }
 
-@Composable fun Address() = rememberAddress {
+@Composable fun AddressModel() = rememberAddressModel {
   onStreetChanged { street = it }
   onCityChanged { city = it }
   onStateChanged { state = it }
@@ -23,5 +23,5 @@ interface Address {
 
 @Preview(showBackground = true)
 @Composable fun AddressPreview() {
-  Address()
+  AddressModel()
 }

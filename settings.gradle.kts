@@ -4,7 +4,7 @@ pluginManagement {
        google()
     }
 }
-rootProject.name = "ComposeData"
+rootProject.name = "ComposeModel"
 
 include(
   "demo",

@@ -15,9 +15,6 @@ import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.zachklipp.composedata.ComposeDataProcessor.Companion.COMPOSE_DATA_ANNOTATION
 import kotlin.reflect.KProperty1
 
-/**
- * TODO write documentation
- */
 class Parser(private val logger: KSPLogger) {
 
   fun parseModelInterface(symbol: KSClassDeclaration, builtins: KSBuiltIns): ModelInterface? {
@@ -62,12 +59,12 @@ class Parser(private val logger: KSPLogger) {
   }
 
   fun parseConfig(model: ModelInterface, resolver: Resolver): Config {
-    val composeDataAnnotationType = resolver.getClassDeclarationByName<ComposeData>()
+    val composeDataAnnotationType = resolver.getClassDeclarationByName<ComposeModel>()
     val annotation = model.declaration.annotations.single {
       it.annotationType.resolve().declaration == composeDataAnnotationType
     }
     return Config(
-      saveable = annotation[ComposeData::saveable] ?: true,
+      saveable = annotation[ComposeModel::saveable] ?: true,
     )
   }
 

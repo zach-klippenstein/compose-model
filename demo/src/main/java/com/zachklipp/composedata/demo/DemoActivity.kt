@@ -27,7 +27,7 @@ class DemoActivity : AppCompatActivity() {
 }
 
 @Composable fun App() {
-  val contactInfo = ContactInfo()
+  val contactInfo = ContactInfoModel()
 
   Column {
     BasicText("Hello, ${contactInfo.name}!")
@@ -37,25 +37,25 @@ class DemoActivity : AppCompatActivity() {
     )
     BasicText("${contactInfo.edits} edits", style = TextStyle(fontStyle = Italic))
     Spacer(Modifier.size(16.dp))
-    AddressEditor(contactInfo.address)
+    AddressEditor(contactInfo.addressModel)
   }
 }
 
-@Composable private fun AddressEditor(address: Address) {
+@Composable private fun AddressEditor(addressModel: AddressModel) {
   Column {
     BasicText("Street:")
     BasicTextField(
-      address.street, onValueChange = address::onStreetChanged,
+      addressModel.street, onValueChange = addressModel::onStreetChanged,
       Modifier.border(1.dp, Color.Black).padding(4.dp)
     )
     BasicText("City:")
     BasicTextField(
-      address.city, onValueChange = address::onCityChanged,
+      addressModel.city, onValueChange = addressModel::onCityChanged,
       Modifier.border(1.dp, Color.Black).padding(4.dp)
     )
     BasicText("State:")
     BasicTextField(
-      address.state, onValueChange = address::onStateChanged,
+      addressModel.state, onValueChange = addressModel::onStateChanged,
       Modifier.border(1.dp, Color.Black).padding(4.dp)
     )
   }
