@@ -58,6 +58,7 @@ dependencies {
   debugImplementation "androidx.compose.ui:ui-tooling:1.0.0-alpha12"
   debugImplementation "org.jetbrains.kotlin:kotlin-reflect:1.4.30"
 
+  testImplementation project(":testing")
   testImplementation 'junit:junit:4.13.2'
 
   androidTestImplementation 'com.android.support.test:runner:1.0.2'

@@ -9,5 +9,6 @@ rootProject.name = "ComposeModel"
 include(
   "demo",
   "processor",
-  "runtime"
+  "runtime",
+  "testing"
 )
