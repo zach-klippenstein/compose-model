@@ -1,18 +1,19 @@
 package com.zachklipp.composedata
 
+import com.google.devtools.ksp.getClassDeclarationByName
 import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.getDeclaredProperties
 import com.google.devtools.ksp.getVisibility
 import com.google.devtools.ksp.processing.KSBuiltIns
 import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.ClassKind.INTERFACE
+import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
-import com.squareup.kotlinpoet.ClassName
 import com.zachklipp.composedata.ComposeDataProcessor.Companion.COMPOSE_DATA_ANNOTATION
-
-private val UNIT_TYPE = ClassName("kotlin", "Unit")
+import kotlin.reflect.KProperty1
 
 /**
  * TODO write documentation
@@ -53,9 +54,20 @@ class Parser(private val logger: KSPLogger) {
     return ModelInterface(
       symbol.packageName.asString(),
       symbol.simpleName.asString(),
+      symbol,
       symbol.getVisibility(),
       properties,
       eventHandlers
+    )
+  }
+
+  fun parseConfig(model: ModelInterface, resolver: Resolver): Config {
+    val composeDataAnnotationType = resolver.getClassDeclarationByName<ComposeData>()
+    val annotation = model.declaration.annotations.single {
+      it.annotationType.resolve().declaration == composeDataAnnotationType
+    }
+    return Config(
+      saveable = annotation[ComposeData::saveable] ?: true,
     )
   }
 
@@ -116,4 +128,8 @@ class Parser(private val logger: KSPLogger) {
       hasDefault = !declaration.isAbstract
     )
   }
+
+  @Suppress("UNCHECKED_CAST")
+  private operator fun <T> KSAnnotation.get(name: KProperty1<*, T>): T? =
+    arguments.single { it.name!!.asString() == name.name }.value as T?
 }

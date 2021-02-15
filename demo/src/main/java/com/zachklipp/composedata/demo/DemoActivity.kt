@@ -5,7 +5,9 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.runtime.Composable
@@ -25,14 +27,36 @@ class DemoActivity : AppCompatActivity() {
 }
 
 @Composable fun App() {
-  val viewModel = ViewModel()
+  val contactInfo = ContactInfo()
 
   Column {
-    BasicText("Hello, ${viewModel.name}!")
+    BasicText("Hello, ${contactInfo.name}!")
     BasicTextField(
-      value = viewModel.name, onValueChange = viewModel::onNameChanged,
+      value = contactInfo.name, onValueChange = contactInfo::onNameChanged,
       Modifier.border(1.dp, Color.Black).padding(4.dp)
     )
-    BasicText("${viewModel.edits} edits", style = TextStyle(fontStyle = Italic))
+    BasicText("${contactInfo.edits} edits", style = TextStyle(fontStyle = Italic))
+    Spacer(Modifier.size(16.dp))
+    AddressEditor(contactInfo.address)
+  }
+}
+
+@Composable private fun AddressEditor(address: Address) {
+  Column {
+    BasicText("Street:")
+    BasicTextField(
+      address.street, onValueChange = address::onStreetChanged,
+      Modifier.border(1.dp, Color.Black).padding(4.dp)
+    )
+    BasicText("City:")
+    BasicTextField(
+      address.city, onValueChange = address::onCityChanged,
+      Modifier.border(1.dp, Color.Black).padding(4.dp)
+    )
+    BasicText("State:")
+    BasicTextField(
+      address.state, onValueChange = address::onStateChanged,
+      Modifier.border(1.dp, Color.Black).padding(4.dp)
+    )
   }
 }

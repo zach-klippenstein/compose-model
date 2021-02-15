@@ -1,6 +1,8 @@
 package com.zachklipp.composedata
 
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 
 /**
@@ -8,5 +10,8 @@ import com.squareup.kotlinpoet.TypeSpec
  */
 data class ModelImplSpec(
   val spec: TypeSpec,
-  val imports: List<MemberName>
+  val name: ClassName,
+  val imports: List<MemberName>,
+  val saverSpec: TypeSpec?,
+  val saverName: TypeName?
 )

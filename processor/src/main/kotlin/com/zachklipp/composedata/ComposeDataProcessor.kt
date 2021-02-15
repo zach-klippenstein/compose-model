@@ -8,6 +8,7 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.validate
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import java.io.PrintWriter
 
@@ -57,8 +58,11 @@ class ComposeDataProcessor : SymbolProcessor {
 
   private fun processComposeDataClass(symbol: KSClassDeclaration, resolver: Resolver) {
     val modelInterface = parser.parseModelInterface(symbol, resolver.builtIns) ?: return
+    val implClassName = ClassName(modelInterface.packageName, "${modelInterface.simpleName}Impl")
+    val config = parser.parseConfig(modelInterface, resolver)
     val builderInterface = generateBuilderInterface(modelInterface, typeConverter)
-    val implClass = generateImplClass(modelInterface, builderInterface, typeConverter)
+    val implClass =
+      generateImplClass(modelInterface, builderInterface, implClassName, config, typeConverter)
     val rememberFunction =
       generateRememberFunction(modelInterface, builderInterface, implClass, typeConverter)
 

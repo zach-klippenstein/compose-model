@@ -1,5 +1,6 @@
 package com.zachklipp.composedata
 
+import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.Visibility
@@ -10,6 +11,7 @@ import com.google.devtools.ksp.symbol.Visibility
 data class ModelInterface(
   val packageName: String,
   val simpleName: String,
+  val declaration: KSClassDeclaration,
   val visibility: Visibility,
   val properties: List<ModelProperty>,
   val eventHandlers: List<ModelEventHandler>,
