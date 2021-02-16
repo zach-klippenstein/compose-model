@@ -143,17 +143,37 @@ it's not published. There is a demo module that should build and run however, an
 the repo and mess around if you like. There's some validation with vaguely useful error messages,
 but there's probably a lot of ways to get the plugin to just puke.
 
+### Future work
+
 I don't expect I'll spend much more time on this, but if I wanted to make it a real thing, some
 features I'd like to add are:
 
 - Annotation for leaving certain properties out of persistence (probably just use `@Transient`).
 - Annotation for specifying custom `Saver`s for individual properties.
 - Helpers for writing unit tests – create a special composition that forbids emissions.
-- Support model properties with `StateFlow` types. The builder interface would still just get a
+- ~Support model properties with `StateFlow` types. The builder interface would still just get a
   mutable property, but instead of being backed by a `MutableState` it would be backed by a
-  `MutableStateFlow`.
+  `MutableStateFlow`.~ This makes it harder to do some of the other things, and the use case of
+  supporting consumtion from non-Compose code can be addressed in a more elegant way (see below).
 - Multiplatform support.
 - The `@ComposeModel` annotation should be a `@StableMarker` to opt-in to compiler optimizations.
 - Implement as a full-fledged compiler plugin instead of a KSP processor to integrate more tightly
   with the IDE (real-time redlines, not require a manual build to show changes to generated code),
   and maybe make the generated APIs cleaner.
+- Optionally generate a simple factory function that returns an immutable, value-type-like
+  implementation of the interface (implements `equals` and `hashcode`) and does so only using the
+  properties, not the functions (one of the big issues we've had testing renderings in Workflow).
+- Create a helper for consuming from legacy Android `View`s (similar to Workflow's `LayoutRunner`)
+  that automatically observes snapshot reads in its update function to automatically update views
+  that are configured using `MutableState`.
+- Make it possible define custom annotations that alias specific combinations of `@ComposeModel`
+  parameters:
+  ```kotlin
+  @ComposeModel(someProperty = true, someOtherProperty = false)
+  annotation class SquareModel
+  ```
+- Optionally generate a `rememberFooAsState` or `AsFlow` function that has the same signature as `rememberFoo`
+  but returns a `MutableState<Foo>` or `StateFlow<Foo>` instead of a `Foo`, and pushes a new value-type `Foo` (see 
+  above) the state on every change instead of updating only individual properties. This could be
+  useful for integrating with libraries like Workflow which expect a stream of immutable objects, instead of a single
+  object that changes over time. Would need to make sure updates aren't always a frame late though.
