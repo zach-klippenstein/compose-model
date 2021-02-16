@@ -177,3 +177,30 @@ features I'd like to add are:
   above) the state on every change instead of updating only individual properties. This could be
   useful for integrating with libraries like Workflow which expect a stream of immutable objects, instead of a single
   object that changes over time. Would need to make sure updates aren't always a frame late though.
+- Link the builder classes to their source interfaces in the type system so that other code can express
+  relationships between them. E.g.
+  ```kotlin
+  // In the runtime artifact:
+  interface ComposeModelBuilder<ModelT : Any>
+  
+  // Example of generated builder:
+  interface FooModelBuilder : ComposeModelBuilder<FooModel> { /* … */ }
+  ```
+- Create factory and/or remember functions that don't take a builder lambda and instead return a `Pair<FooModel, FooModelBuilder>`.
+  Then third-party abstractions could be created that do something like:
+  ```kotlin
+  fun <ModelT : Any, BuilderT : ComposeModelBuilder<ModelT>> doSomething(
+    modelFactory: () -> Pair<ModelT, BuilderT>,
+    customBuilder: BuilderT.() -> Unit
+  ): ModelT {
+    val (model, builder) = factory()
+    // Do something with builder.
+    customBuilder(builder)
+    return model
+  }
+  
+  // And be called like:
+  val fooModel = doSomething(createFooModel(arg1, arg2)) {
+    // Build the Foo somehow
+  }
+  ```
